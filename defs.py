@@ -41,36 +41,36 @@ class Source (Node):
         self.value = value
 
 
-class Layer :
-    def __init__ (self, layer_size : int, node_type : type) :
+class NeuralLayer ():
+    def __init__(self, layer_size: int, activation):
         self.layer_size = layer_size
 
-        self.nodes = [node_type() for _ in range(self.layer_size)]
+        self.neurons = [Neuron() for _ in range(self.layer_size)]
 
-class NeuralLayer (Layer):
-    def __init__(self, layer_size: int):
-        super().__init__(layer_size, Neuron)
+        for neuron in self.neurons :
+            neuron.set_activation(activation)
 
     def calculate_output (self) :
-        for neuron in self.nodes :
+        for neuron in self.neurons :
             neuron.calculate_output()
 
     def reset(self) :
-        for neuron in self.nodes :
+        for neuron in self.neurons :
             neuron.reset()
 
-class SourceLayer (Layer):
+class SourceLayer ():
     def __init__(self, layer_size: int):
-        super().__init__(layer_size, Source)
+        self.layer_size = layer_size
 
         self.sources = [Source() for _ in range(self.layer_size)]
 
-    def set_values (self, values) :
+
+def set_values (self, values) :
         if len(values) != self.layer_size :
             raise ValueError(f"Expected {self.layer_size} values, but got {len(values)}")
 
         for i in range(self.layer_size) :
-            self.sources[i].set_value(values[i])
+            self.nodes[i].set_value(values[i])
 
 class NeuralNetwork:
     def __init__(self) :
@@ -83,8 +83,8 @@ class NeuralNetwork:
     def set_inputs (self, inputs) :
         self.sourceLayer.set_values(inputs)
 
-    def add_layer(self, net_size : int) :
-        self.layers.append(NeuralLayer(net_size))
+    def add_layer(self, net_size : int, activation) :
+        self.layers.append(NeuralLayer(net_size, activation))
 
     def calculate_output (self) :
         for layer in self.layers :
