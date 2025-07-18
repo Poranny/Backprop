@@ -42,13 +42,16 @@ class Source (Node):
 
 
 class NeuralLayer ():
-    def __init__(self, layer_size: int, activation):
+    def __init__(self, layer_size: int, activation, previous_nodes : list[Node]) :
         self.layer_size = layer_size
 
         self.neurons = [Neuron() for _ in range(self.layer_size)]
 
         for neuron in self.neurons :
             neuron.set_activation(activation)
+
+            for node in previous_nodes :
+                neuron.add_input(node)
 
     def calculate_output (self) :
         for neuron in self.neurons :
@@ -84,7 +87,13 @@ class NeuralNetwork:
         self.sourceLayer.set_values(sources)
 
     def add_layer(self, net_size : int, activation : callable) :
-        self.layers.append(NeuralLayer(net_size, activation))
+        if self.sourceLayer is None:
+            raise RuntimeError ("Source layer not initialized")
+
+        if len(self.layers) == 0 :
+            self.layers.append(NeuralLayer(net_size, activation, self.sourceLayer.sources))
+        else :
+            self.layers.append (NeuralLayer(net_size, activation, self.layers[-1].neurons))
 
     def calculate_output (self) :
         for layer in self.layers :
