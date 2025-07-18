@@ -15,7 +15,7 @@ class Neuron (Node):
         self.activation = None
 
     def add_input(self, input_node):
-        self.inputs_weights.append((input_node, 0.0))
+        self.inputs_weights.append((input_node, 1.0))
 
     def set_activation(self, activation):
         self.activation = activation
@@ -104,6 +104,8 @@ class NeuralNetwork:
 
         for neuron in self.layers[-1].neurons :
             vec.append(neuron.get_value())
+
+        return vec
 
     def reset(self):
         for layer in self.layers :
