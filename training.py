@@ -1,6 +1,6 @@
 from typing import Tuple, List
 
-from defs import NeuralNetwork
+from neural_defs import NeuralNetwork
 from loss_functions import MSE
 
 
@@ -22,5 +22,7 @@ def train_epoch(nn : NeuralNetwork, data : List[Tuple[List, List]]) :
         loss = loss_fn(output, expected_outputs)
 
         total_loss += loss
+
+        nn.backprop(expected_outputs, 0.1)
 
     return total_loss / len(data)
