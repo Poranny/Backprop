@@ -20,9 +20,9 @@ def train_epoch(nn : NeuralNetwork, data : List[Tuple[List, List]]) :
         loss_fn = MSE
 
         loss = loss_fn(output, expected_outputs)
-
+        print(loss)
         total_loss += loss
 
-        nn.backprop(expected_outputs, 0.1)
+        nn.backprop(expected_outputs, 0.001)
 
     return total_loss / len(data)

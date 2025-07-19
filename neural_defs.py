@@ -1,3 +1,4 @@
+import random
 from typing import List
 
 
@@ -22,7 +23,7 @@ class Neuron (Node):
     def __init__(self):
         super().__init__()
 
-        self.bias = 0.0
+        self.bias = random.uniform(-1.0, 1.0)
 
         self.delta = 0.0
 
@@ -37,9 +38,9 @@ class Neuron (Node):
         weighted_sum = 0.0
 
         for connection in self.input_connections :
-            weighted_sum += connection.input_neuron.get_value() * connection.weight
-        self.z = weighted_sum
-        self.value = self.activation(weighted_sum)
+            weighted_sum += connection.input_node.get_value() * connection.weight
+        self.z = weighted_sum + self.bias
+        self.value = self.activation(self.z)
 
     def reset (self) :
         self.input_connections = []
@@ -48,7 +49,7 @@ class Neuron (Node):
 
     def update_weights(self, learning_rate):
         for i, connection in enumerate(self.input_connections):
-            gradient = self.delta * connection.input_neuron.get_value()
+            gradient = self.delta * connection.input_node.get_value()
 
             new_weight = connection.weight - learning_rate * gradient
             self.input_connections[i].weight = new_weight
@@ -63,10 +64,10 @@ class Source (Node):
         self.value = value
 
 class NeuralConnection :
-    def __init__ (self, input_neuron, output_neuron) :
-        self.input_neuron : Neuron = input_neuron
-        self.output_neuron : Neuron = output_neuron
-        self.weight : float = 1.0
+    def __init__ (self, input_node, output_node) :
+        self.input_node : Node = input_node
+        self.output_node : Neuron = output_node
+        self.weight : float = random.uniform(-1.0, 1.0)
 
     def set_weight(self, weight) :
         self.weight = weight
@@ -82,7 +83,7 @@ class NeuralLayer:
             neuron.set_activation(activation)
 
             for prev_node in previous_nodes :
-                new_connection = NeuralConnection(neuron, prev_node)
+                new_connection = NeuralConnection(prev_node, neuron)
 
                 neuron.add_input(new_connection)
                 prev_node.add_output(new_connection)
@@ -99,12 +100,11 @@ class NeuralLayer:
         for i, neuron in enumerate(self.neurons) :
 
             if expected_outputs is None :
-                sum_deltas = sum((conn.output_neuron.delta * conn.weight) for conn in neuron.output_connections)
+                sum_deltas = sum((conn.output_node.delta * conn.weight) for conn in neuron.output_connections)
                 neuron.delta = neuron.activation(neuron.z, True) * sum_deltas
             else :
                 error = neuron.get_value() - expected_outputs[i]
                 neuron.delta = error * neuron.activation(neuron.z, True)
-
 
             neuron.update_weights(learning_rate)
 
@@ -158,8 +158,10 @@ class NeuralNetwork:
         if len(self.layers) == 0 :
             raise RuntimeError ("No neural network to backprop")
 
-        for layer in reversed(self.layers) :
-            layer.backprop(expected_output, learning_rate)
+        self.layers[-1].backprop(learning_rate, expected_output)
+
+        for layer in reversed(self.layers[0:-1]) :
+            layer.backprop(learning_rate)
 
     def reset(self):
         for layer in self.layers :
