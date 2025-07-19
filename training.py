@@ -2,6 +2,18 @@ from typing import Tuple, List
 
 from neural_defs import NeuralNetwork
 from loss_functions import MSE
+from visualize_nn import visualize_full_nn
+
+def train(nn : NeuralNetwork, data: List[Tuple[List, List]], iters: int, lr: float, log=False) :
+    for epoch in range(iters) :
+        avg_loss = train_epoch(nn, data, lr, log)
+
+        if log:
+            if epoch % (iters / 100) == 0:
+                print(f"Epoch {epoch} avg loss: {avg_loss}")
+
+            if epoch % (iters / 10) == 0:
+                visualize_full_nn (nn)
 
 
 def train_epoch(nn: NeuralNetwork, data: List[Tuple[List, List]], lr: float, log=False):
@@ -20,9 +32,6 @@ def train_epoch(nn: NeuralNetwork, data: List[Tuple[List, List]], lr: float, log
         loss_fn = MSE
 
         loss = loss_fn(output, expected_outputs)
-
-        if log:
-            print(f"Loss {loss} at {row} -- given output {output}")
 
         total_loss += loss
 

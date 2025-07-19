@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def visualize_full_nn(neural_net, x_range=(-10, 10), num_points=200):
+def visualize_full_nn(neural_net, x_range=(-1, 1), num_points=200):
 
     input_dim = neural_net.sourceLayer.layer_size
     output_dim = len(neural_net.layers[-1].neurons)
