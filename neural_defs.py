@@ -1,5 +1,5 @@
 import random
-from typing import List
+from typing import List, Tuple
 
 
 class Node :
@@ -78,7 +78,7 @@ class NeuralLayer:
         self.layer_size = layer_size
 
         self.neurons = [Neuron() for _ in range(self.layer_size)]
-
+        self.activation = activation
         for neuron in self.neurons :
             neuron.set_activation(activation)
 
@@ -108,12 +108,22 @@ class NeuralLayer:
 
             neuron.update_weights(learning_rate)
 
+    def get_weights (self) :
+        all_neurons_weights : List[Tuple[List[float], float]] = []
+        for neuron in self.neurons :
+            all_weights : List[float] = []
+            for connection in neuron.input_connections :
+                all_weights.append(connection.weight)
+            all_neurons_weights.append((all_weights, neuron.bias))
+        return all_neurons_weights, self.activation
+
+
+
 class SourceLayer:
     def __init__(self, layer_size: int):
         self.layer_size = layer_size
 
         self.sources = [Source() for _ in range(self.layer_size)]
-
 
     def set_values (self, values) :
         if len(values) != self.layer_size :
@@ -166,3 +176,9 @@ class NeuralNetwork:
     def reset(self):
         for layer in self.layers :
             layer.reset()
+
+    def get_weights (self) :
+        all_layers_weights : List[Tuple[List[Tuple[List[float], float]], callable]] = []
+        for layer in self.layers :
+            all_layers_weights.append(layer.get_weights())
+        return all_layers_weights
