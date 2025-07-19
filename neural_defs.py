@@ -26,6 +26,8 @@ class Neuron (Node):
 
         self.delta = 0.0
 
+        self.z = 0.0
+
         self.activation = None
 
     def set_activation(self, activation):
@@ -36,7 +38,7 @@ class Neuron (Node):
 
         for connection in self.input_connections :
             weighted_sum += connection.input_neuron.get_value() * connection.weight
-
+        self.z = weighted_sum
         self.value = self.activation(weighted_sum)
 
     def reset (self) :
@@ -79,10 +81,11 @@ class NeuralLayer:
         for neuron in self.neurons :
             neuron.set_activation(activation)
 
-            for node in previous_nodes :
-                new_connection = NeuralConnection(neuron, node)
+            for prev_node in previous_nodes :
+                new_connection = NeuralConnection(neuron, prev_node)
+
                 neuron.add_input(new_connection)
-                node.add_output(new_connection)
+                prev_node.add_output(new_connection)
 
     def calculate_output (self) :
         for neuron in self.neurons :
@@ -92,14 +95,16 @@ class NeuralLayer:
         for neuron in self.neurons :
             neuron.reset()
 
-    def backprop (self, expected_output, learning_rate) :
-
+    def backprop (self, learning_rate, expected_outputs=None) :
         for i, neuron in enumerate(self.neurons) :
-            error = neuron.get_value() - expected_output[i]
 
-            delta = error * neuron.activation(neuron.get_value())
+            if expected_outputs is None :
+                sum_deltas = sum((conn.output_neuron.delta * conn.weight) for conn in neuron.output_connections)
+                neuron.delta = neuron.activation(neuron.z, True) * sum_deltas
+            else :
+                error = neuron.get_value() - expected_outputs[i]
+                neuron.delta = error * neuron.activation(neuron.z, True)
 
-            neuron.delta = delta
 
             neuron.update_weights(learning_rate)
 
@@ -152,7 +157,6 @@ class NeuralNetwork:
     def backprop(self, expected_output, learning_rate):
         if len(self.layers) == 0 :
             raise RuntimeError ("No neural network to backprop")
-
 
         for layer in reversed(self.layers) :
             layer.backprop(expected_output, learning_rate)
