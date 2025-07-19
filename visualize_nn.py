@@ -39,7 +39,7 @@ def visualize_full_nn(neural_net, x_range=(-10, 10), num_points=200):
                     neural_net.calculate_output()
                     Z[i, j] = neural_net.get_output()[out_idx]
             plt.figure()
-            plt.pcolormesh(X, Y, Z, shading='auto')
+            plt.pcolormesh(X, Y, Z, shading="auto")
             plt.title(f"Fully connected NN - Output Neuron {out_idx}")
             plt.xlabel("Input x1")
             plt.ylabel("Input x2")
