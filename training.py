@@ -1,26 +1,26 @@
+from typing import Tuple, List
+
 from defs import NeuralNetwork
+from loss_functions import MSE
 
 
-def train(nn : NeuralNetwork, data) :
-    nn.set_source_inputs(data[0])
+def train_epoch(nn : NeuralNetwork, data : List[Tuple[List, List]]) :
 
-    nn.calculate_output()
+    total_loss = 0.0
 
-    output = nn.get_output()
+    for row in data :
+        inputs, expected_outputs = row
 
-    loss_fn = MSE
+        nn.set_source_inputs(inputs)
 
-    loss_fn(output, data[1])
+        nn.calculate_output()
 
-def MSE (output : list, labels : list) -> float :
-    mse = 0.0
+        output = nn.get_output()
 
-    if len(labels) != len(output) :
-        raise ValueError('Number of labels does not match number of outputs')
+        loss_fn = MSE
 
-    for i in range(len(output)) :
-        mse += (output[i] - labels[i])**2
+        loss = loss_fn(output, expected_outputs)
 
-    mse /= len(output)
+        total_loss += loss
 
-    return mse
+    return total_loss / len(data)
