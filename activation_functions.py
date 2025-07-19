@@ -19,3 +19,10 @@ def Sigmoid (x : float, is_derivative : bool = False) -> float :
         return sigmoid_val
     else :
         return sigmoid_val * (1 - sigmoid_val)
+
+def Tanh(x: float, is_derivative: bool = False) -> float:
+    tanh_val = math.tanh(x)
+    if not is_derivative:
+        return tanh_val
+    else:
+        return 1.0 - tanh_val ** 2
