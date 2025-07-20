@@ -1,12 +1,13 @@
+import numpy as np
+
 def MSE(output: list, labels: list) -> float:
-    mse = 0.0
 
     if len(labels) != len(output):
         raise ValueError("Number of labels does not match number of outputs")
 
-    for i in range(len(output)):
-        mse += (output[i] - labels[i]) ** 2
+    output = np.array(output)
+    labels = np.array(labels)
 
-    mse /= len(output)
+    mse = np.mean((output - labels) ** 2)
 
-    return mse
+    return float(mse)
