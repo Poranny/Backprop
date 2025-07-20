@@ -19,7 +19,7 @@ def train(nn : NeuralNetwork, data: List[Tuple[List, List]], iters: int, lr: flo
                 print(f"Epoch {epoch} avg loss: {avg_loss}")
 
             if epoch % (iters / 10) == 0:
-                visualize_full_nn (nn, x_range=(-100, 100), y_range=(-100, 100), normalizer=normalizer)
+                visualize_full_nn (nn, x_range=(-10, 10), y_range=(-10, 10), normalizer=normalizer)
 
 
 def train_epoch(nn: NeuralNetwork, data: List[Tuple[List, List]], lr: float):

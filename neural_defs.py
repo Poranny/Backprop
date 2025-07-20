@@ -51,7 +51,7 @@ class Neuron(Node):
 
     def update_weights(self, learning_rate):
         inputs = np.array([conn.input_node.get_value() for conn in self.input_connections])
-        weights = np.array([conn.input_node.weight for conn in self.input_connections])
+        weights = np.array([conn.weight for conn in self.input_connections])
 
         gradients = self.delta * inputs
         new_weights = weights - learning_rate * gradients
@@ -105,17 +105,25 @@ class NeuralLayer:
             neuron.reset()
 
     def backprop(self, learning_rate, expected_outputs=None):
-        for i, neuron in enumerate(self.neurons):
-            if expected_outputs is None:
+        z_vals = np.array([neuron.z for neuron in self.neurons])
+
+        if expected_outputs is not None:
+            outputs = np.array([n.get_value() for n in self.neurons])
+            errors = outputs - expected_outputs
+            activation_derivs = np.array([n.activation(z, is_derivative=True) for n, z in zip(self.neurons, z_vals)])
+            deltas = errors * activation_derivs
+
+            for neuron, delta in zip(self.neurons, deltas):
+                neuron.delta = delta
+        else:
+            for neuron in self.neurons:
                 sum_deltas = sum(
-                    (conn.output_node.delta * conn.weight)
+                    conn.output_node.delta * conn.weight
                     for conn in neuron.output_connections
                 )
-                neuron.delta = neuron.activation(neuron.z, True) * sum_deltas
-            else:
-                error = neuron.get_value() - expected_outputs[i]
-                neuron.delta = error * neuron.activation(neuron.z, True)
+                neuron.delta = neuron.activation(neuron.z, is_derivative=True) * sum_deltas
 
+        for neuron in self.neurons:
             neuron.update_weights(learning_rate)
 
     def get_weights(self):
