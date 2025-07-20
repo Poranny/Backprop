@@ -36,8 +36,8 @@ class Neuron(Node):
 
     def calculate_output(self):
 
-        weights = np.array(conn.weight for conn in self.input_connections)
-        values = np.array(conn.input_node.get_value() for conn in self.input_connections)
+        weights = np.array([conn.weight for conn in self.input_connections])
+        values = np.array([conn.input_node.get_value() for conn in self.input_connections])
 
         weighted_sum = np.sum(values * weights)
 
@@ -50,11 +50,14 @@ class Neuron(Node):
         self.activation = None
 
     def update_weights(self, learning_rate):
-        for i, connection in enumerate(self.input_connections):
-            gradient = self.delta * connection.input_node.get_value()
+        inputs = np.array([conn.input_node.get_value() for conn in self.input_connections])
+        weights = np.array([conn.input_node.weight for conn in self.input_connections])
 
-            new_weight = connection.weight - learning_rate * gradient
-            self.input_connections[i].weight = new_weight
+        gradients = self.delta * inputs
+        new_weights = weights - learning_rate * gradients
+
+        for conn, w in zip(self.input_connections, new_weights):
+            conn.weight = w
 
         self.bias -= learning_rate * self.delta
 
@@ -83,6 +86,7 @@ class NeuralLayer:
 
         self.neurons = [Neuron() for _ in range(self.layer_size)]
         self.activation = activation
+
         for neuron in self.neurons:
             neuron.set_activation(activation)
 
