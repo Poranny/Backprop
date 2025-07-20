@@ -11,3 +11,8 @@ Simple implementation of a feedforward Fully Connected Neural Network with backp
 - MSE loss calculation
 - Visualization for 1D and 2D inputs
 - Minimal dependencies, easy to extend
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <img src="visualizations/plot1.png" alt="Plot1" style="display: block; height:395px" />
+  <img src="visualizations/plot3.png" alt="Plot3" style="display: block; height:395px" />
+</div>
