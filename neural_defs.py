@@ -106,7 +106,6 @@ class NeuralLayer:
 
     def backprop(self, learning_rate, expected_outputs=None):
         for i, neuron in enumerate(self.neurons):
-
             if expected_outputs is None:
                 sum_deltas = sum(
                     (conn.output_node.delta * conn.weight)
@@ -120,13 +119,15 @@ class NeuralLayer:
             neuron.update_weights(learning_rate)
 
     def get_weights(self):
-        all_neurons_weights: List[Tuple[List[float], float]] = []
+        all_weights = []
+        all_biases = []
+
         for neuron in self.neurons:
-            all_weights: List[float] = []
-            for connection in neuron.input_connections:
-                all_weights.append(connection.weight)
-            all_neurons_weights.append((all_weights, neuron.bias))
-        return all_neurons_weights, self.activation
+            weights = [conn.weight for conn in neuron.input_connections]
+            all_weights.append(weights)
+            all_biases.append(neuron.bias)
+
+        return (all_weights, all_biases), self.activation
 
 
 class SourceLayer:
