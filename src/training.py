@@ -1,9 +1,9 @@
 from typing import Tuple, List
 
-from neural_defs import NeuralNetwork
-from loss_functions import MSE
-from visualize_nn import visualize_full_nn
-from normalizer import Normalizer
+from src.neural_defs import NeuralNetwork
+from src.loss_functions import MSE
+from src.visualize_nn import visualize_full_nn
+from src.normalizer import Normalizer
 
 
 def train(

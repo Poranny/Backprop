@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from testing import predict_with_normalization
+from src.testing import predict_with_normalization
 
 
 def visualize_full_nn(
