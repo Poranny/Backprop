@@ -38,3 +38,15 @@ class Normalizer:
 
     def inverse_transform_outputs(self, data):
         return (np.array(data) * self.outputs_std + self.outputs_mean).tolist()
+
+    def transform_input_number(self, number):
+        return (number - self.inputs_mean) / self.inputs_std
+
+    def inverse_transform_input_number(self, number):
+        return number * self.inputs_std + self.inputs_mean
+
+    def transform_output_number(self, number):
+        return float((number - self.outputs_mean) / self.outputs_std)
+
+    def inverse_transform_output_number(self, number):
+        return float(number * self.outputs_std + self.outputs_mean)
