@@ -1,6 +1,6 @@
 import random
 from typing import List, Tuple
-
+import numpy as np
 
 class Node:
     def __init__(self):
@@ -35,10 +35,12 @@ class Neuron(Node):
         self.activation = activation
 
     def calculate_output(self):
-        weighted_sum = 0.0
 
-        for connection in self.input_connections:
-            weighted_sum += connection.input_node.get_value() * connection.weight
+        weights = np.array(conn.weight for conn in self.input_connections)
+        values = np.array(conn.input_node.get_value() for conn in self.input_connections)
+
+        weighted_sum = np.sum(values * weights)
+
         self.z = weighted_sum + self.bias
         self.value = self.activation(self.z)
 
