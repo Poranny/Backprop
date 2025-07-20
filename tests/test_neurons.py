@@ -1,11 +1,12 @@
 import pytest
-import numpy as np
-import random
 
 from src.activation_functions import Identity
 from src.neural_defs import (
-    SourceLayer, NeuralConnection, NeuralLayer,
-    NeuralNetwork, Neuron, Source
+    SourceLayer,
+    NeuralConnection,
+    NeuralNetwork,
+    Neuron,
+    Source,
 )
 
 
@@ -18,6 +19,7 @@ def test_source_layer_set_values_success_and_failure():
     with pytest.raises(ValueError):
         sl.set_values([1.0, 2.0])
 
+
 def test_neural_connection_and_node_linking():
     src = Source()
     dst = Neuron()
@@ -29,6 +31,7 @@ def test_neural_connection_and_node_linking():
     assert conn in dst.input_connections
 
     assert hasattr(conn, "weight") and isinstance(conn.weight, (int, float))
+
 
 def test_single_neuron_forward_pass_and_get_weights():
     src = Source()
@@ -54,6 +57,7 @@ def test_single_neuron_forward_pass_and_get_weights():
     assert isinstance(biases[0], (int, float))
     assert callable(act) and act is Identity
 
+
 def test_neural_network_forward_and_get_output():
 
     nn = NeuralNetwork()
@@ -76,6 +80,7 @@ def test_neural_network_forward_and_get_output():
     out = nn.get_output()
     # 0.5*4+0=2.0, 2.0*2+(-1)=3.0
     assert out == [pytest.approx(3.0)]
+
 
 def test_neural_network_errors_and_backprop():
     nn = NeuralNetwork()

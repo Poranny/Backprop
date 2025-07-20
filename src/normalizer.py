@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Normalizer:
     def __init__(self, data):
         inputs = np.array([row[0] for row in data])

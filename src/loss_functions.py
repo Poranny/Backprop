@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def MSE(output: list, labels: list) -> float:
 
     if len(labels) != len(output):

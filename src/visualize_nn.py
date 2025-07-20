@@ -1,9 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from normalizer import Normalizer
 from testing import predict_with_normalization
 
-def visualize_full_nn(neural_net, normalizer, x_range=(-1, 1), y_range=(-1,1), num_points=200):
+
+def visualize_full_nn(
+    neural_net, normalizer, x_range=(-1, 1), y_range=(-1, 1), num_points=200
+):
 
     input_dim = neural_net.sourceLayer.layer_size
     output_dim = len(neural_net.layers[-1].neurons)
@@ -34,7 +36,9 @@ def visualize_full_nn(neural_net, normalizer, x_range=(-1, 1), y_range=(-1,1), n
             Z = np.zeros_like(X)
             for i in range(X.shape[0]):
                 for j in range(X.shape[1]):
-                    outputs = predict_with_normalization(neural_net, normalizer, [X[i, j], Y[i, j]])
+                    outputs = predict_with_normalization(
+                        neural_net, normalizer, [X[i, j], Y[i, j]]
+                    )
                     Z[i, j] = outputs[out_idx]
             plt.figure()
             plt.pcolormesh(X, Y, Z, shading="auto")

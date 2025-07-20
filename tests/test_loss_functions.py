@@ -1,5 +1,6 @@
 import pytest
-from src.loss_functions import *
+from src.loss_functions import MSE
+
 
 def test_mse():
     input = [0, 1, 2, 3]

@@ -2,6 +2,7 @@ import random
 from typing import List, Tuple
 import numpy as np
 
+
 class Node:
     def __init__(self):
         self.input_connections: List[NeuralConnection] = []
@@ -35,9 +36,10 @@ class Neuron(Node):
         self.activation = activation
 
     def calculate_output(self):
-
         weights = np.array([conn.weight for conn in self.input_connections])
-        values = np.array([conn.input_node.get_value() for conn in self.input_connections])
+        values = np.array(
+            [conn.input_node.get_value() for conn in self.input_connections]
+        )
 
         weighted_sum = np.sum(values * weights)
 
@@ -50,7 +52,9 @@ class Neuron(Node):
         self.activation = None
 
     def update_weights(self, learning_rate):
-        inputs = np.array([conn.input_node.get_value() for conn in self.input_connections])
+        inputs = np.array(
+            [conn.input_node.get_value() for conn in self.input_connections]
+        )
         weights = np.array([conn.weight for conn in self.input_connections])
 
         gradients = self.delta * inputs
@@ -110,7 +114,12 @@ class NeuralLayer:
         if expected_outputs is not None:
             outputs = np.array([n.get_value() for n in self.neurons])
             errors = outputs - expected_outputs
-            activation_derivs = np.array([n.activation(z, is_derivative=True) for n, z in zip(self.neurons, z_vals)])
+            activation_derivs = np.array(
+                [
+                    n.activation(z, is_derivative=True)
+                    for n, z in zip(self.neurons, z_vals)
+                ]
+            )
             deltas = errors * activation_derivs
 
             for neuron, delta in zip(self.neurons, deltas):
@@ -121,7 +130,9 @@ class NeuralLayer:
                     conn.output_node.delta * conn.weight
                     for conn in neuron.output_connections
                 )
-                neuron.delta = neuron.activation(neuron.z, is_derivative=True) * sum_deltas
+                neuron.delta = (
+                    neuron.activation(neuron.z, is_derivative=True) * sum_deltas
+                )
 
         for neuron in self.neurons:
             neuron.update_weights(learning_rate)

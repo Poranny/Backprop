@@ -1,5 +1,6 @@
 import pytest
-from src.activation_functions import *
+from src.activation_functions import Sigmoid, Identity, Tanh, ReLU
+
 
 def test_sigmoid():
     input = 1.0
